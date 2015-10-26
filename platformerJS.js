@@ -6,6 +6,7 @@ var actorChars = {
   "v": Rain,
   "p": Drip,
   "h": Horizontal,
+  "*": Finish,
 };
 
 function Level(plan) {
@@ -390,9 +391,13 @@ Level.prototype.playerTouched = function(type, actor) {
     this.actors = this.actors.filter(function(other) {
       return other != actor;
     });
-    // If there aren't any coins left, player wins
-    if (!this.actors.some(function(actor) {
-           return actor.type == "coin";
+  }
+  else if (type == "finish") {
+    this.actors = this.actors.filter(function(other) {
+      return other != actor;
+    });
+	if(!this.actors.some(function(actor) {
+           return actor.type == "finish";
          })) {
       this.status = "won";
       this.finishDelay = 1;
@@ -540,7 +545,7 @@ function Horizontal(pos, ch){
 		this.repeatPos = pos;
 	}
 }
-Horizontal.prototype.type = "horizontal"
+Horizontal.prototype.type = "horizontal";
 Horizontal.prototype.act = function(step, level) {
   var newPos = this.pos.plus(this.speed.times(step));
   if (!level.obstacleAt(newPos, this.size))
@@ -553,10 +558,17 @@ Horizontal.prototype.act = function(step, level) {
 
 
 
-
-
-
-
+function Finish(pos, ch){
+	this.pos = pos;
+	this.size = new Vector(1, 1);
+	if (ch == "*"){
+		this.speed = new Vector(0, 0);
+	}
+}
+Finish.prototype.type = "finish";
+Finish.prototype.act = function(step, level){
+	var newPos = this.pos
+}
 
 
 
